@@ -15,4 +15,5 @@ You work for one of the top law firms in Nigeria. To be as efficient as possible
  Step 5: right click on defaultAppPool and click on advanced setting
  Step 6: Set Enable 32-Bit Applications to true
  Step 7: type in your browser http://localhost/home_assignment_one
+ Step 8: Find attached the format of the csv to use
  
