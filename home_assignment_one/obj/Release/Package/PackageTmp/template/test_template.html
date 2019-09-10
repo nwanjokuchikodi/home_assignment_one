@@ -1,0 +1,70 @@
+<html>
+<head>
+<style>
+
+.centerdiv {
+  margin: auto;
+  width: 100%;
+  padding: 10px;
+  height: 40px;
+  text-align: justify;
+  text-justify: inter-word;
+}
+.center {
+  margin: auto;
+  width: 100%;
+  border: 3px solid;
+  padding: 10px;
+  height: 40px;
+}
+.centerinfo {
+  margin: auto;
+  width: 100%;
+  border: 3px solid;
+  height: 40px;
+}
+table {
+  border-collapse: collapse;
+}
+
+table, th, td {
+  border: 1px solid black;
+}
+.lblName{
+text-align:right;
+}
+thead tr{
+    background-color:#347CA3;
+     color:white;
+}
+</style>
+</head>
+<body>
+<span>Company: &ensp;&ensp;</span><span style="font-weight:bold">{company_name}</span>
+    <br/>
+    <br />
+<table class="center">
+   
+<thead>
+    <tr>
+        <th>
+            Employee ID
+        </th>
+        <th>
+            Number of Hours
+        </th>
+        <th>
+            Unit Price
+        </th>
+        <th>
+            Cost
+        </th>
+    </tr>
+</thead>
+
+<tbody>
+    {tr_data}
+</tbody>
+</table>
+</body>
+</html>

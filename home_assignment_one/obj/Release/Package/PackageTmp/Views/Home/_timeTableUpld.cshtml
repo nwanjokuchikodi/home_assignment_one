@@ -1,0 +1,51 @@
+﻿@model List<home_assignment_one.Models.TimeTableModel>
+<style>
+    #example1 td {
+        white-space: nowrap;
+        /*font-size:11px*/
+    }
+
+    .popover {
+        max-width: 500px !important;
+    }
+</style>
+<div class="table-responsive divad2a">
+    <table id="example1" class="table table-striped datatable table-condensed table-bordered">
+        <thead>
+            <tr>
+
+                <th>Employee ID</th>
+                <th>Billable Rate (per hour)</th>
+                <th>Project</th>
+                <th>Date</th>
+                <th>Start Time</th>
+                <th>End Time</th>
+                <th>Amount of Time (in hours)</th>
+                <th>Unit Cost</th>
+            </tr>
+        </thead>
+        <tbody>
+            @{
+                var cnt = 0;
+                foreach (var d in Model)
+                {
+                    cnt++;
+                    <tr>
+
+                        <td> @d.employee_id</td>
+                        <td> @d.billable_rate</td>
+                        <td> @d.project_name</td>
+                        <td> @d.date_created</td>
+                        <td> @d.start_time</td>
+                        <td> @d.end_time</td>
+                        <td> @d.time_difference</td>
+                        <td> @d.cost</td>
+                    </tr>
+                }
+            }
+        </tbody>
+    </table>
+</div>
+<script>
+    $("[data-toggle=popover]").popover();
+</script>

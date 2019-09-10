@@ -1,0 +1,179 @@
+﻿@{
+    ViewBag.Title = "Home Page";
+}
+
+<style>
+    #addQuestion {
+        background-color: #C5C9B8;
+        width: 100%;
+        color: #333333;
+        height: 150px;
+        margin: 0 auto;
+        overflow: hidden;
+        padding: 10px 0;
+        align-items: center;
+        justify-content: space-around;
+        display: flex;
+        float: none;
+    }
+</style>
+
+<div class="row">
+    <div class="col-12">
+        <div class="page-title-box">
+            <div class="page-title-right">
+                <ol class="breadcrumb m-0">
+                    <li class="breadcrumb-item"><a href="javascript: void(0);">UBold</a></li>
+                    <li class="breadcrumb-item"><a href="javascript: void(0);">Forms</a></li>
+                    <li class="breadcrumb-item active">Validation</li>
+                </ol>
+            </div>
+            <h4 class="page-title">Form Validation</h4>
+        </div>
+    </div>
+</div>
+<div class="row">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-header">
+                <h5>Generate Invoice</h5>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div id="addQuestion">
+                        <div class="col-sm-10 form-group-lg">
+                            <input type="text" name="company_name" id="company_name" class="form-control" placeholder="Company Name" />
+                            <form>
+                                <div class="form-group">
+                                    <label for="exampleFormControlFile1">Upload Time table</label>
+                                    <input type="file" class="form-control-file" id="upldfile">
+                                </div>
+                            </form>
+                            <button class="btn btn-outline-success" id="saveTestBtn" >
+                                Upload File
+                            </button>
+                            <button class="btn btn-primary" id="refreshTestBtn">
+                                Refresh
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                <br />
+                <div class="row">
+                    <div class="col-sm-10 form-group-lg">
+                        <div id="divGrid">
+
+                        </div>
+                        <button class="btn btn-outline-success" id="btnGenerate" style="display:none">
+                            Generate Invoice
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div id="usersalarycreate" style="display:none" data-request-url="@Url.Action("UploadTimeTable", "Home")"></div>
+<div id="downloadfile" style="display:none" data-request-url="@Url.Action("DownloadInvoice", "Home")"></div>
+<div id="predownload" style="display:none" data-request-url="@Url.Action("GetSummaryFilesPdf", "Home")"></div>
+<script src="~/Scripts/sweetalert.js"></script>
+@section Scripts {
+<script>
+    $(document).ready(function () {
+        $(document).on('click', '#btnGenerate', function (e) {
+            if($('#company_name').val().length <=0)
+            {
+                swal({ title: 'Error!', text: 'Input a Company Name!', type: 'error' })
+                return;
+            }
+            $.ajax({
+                cache: false,
+                type: "POST",
+                data: JSON.stringify({ companyName: $('#company_name').val() }),
+                url: $('#predownload').data('request-url'),
+                dataType: "json",
+                contentType: "application/json; charset=utf-8",
+                success: function (response) {
+                    window.location = $('#downloadfile').data('request-url') + '?company_name=' + $('#company_name').val();
+
+                },
+                failure: function (xhr, status, err) {
+                    swal({ title: 'Error!', text: 'An error occured!', type: 'error' })
+                },
+                beforeSend: function () {
+                   
+                },
+                complete: function () {
+                    $('#saveTestBtn').prop('disabled', false);
+                }
+            });
+        });
+        $(document).on('click', '#refreshTestBtn', function (e) {
+            $('#divGrid').html('')
+            $('#upldfile').val('')
+            $('#company_name').val('')
+            $('#btnGenerate').css('display', 'none');
+            $('#saveTestBtn').prop('disabled', false);
+        });
+
+        $(document).on('click', '#saveTestBtn', function (e) {
+            e.preventDefault();
+            if (window.FormData !== undefined) {
+                var fileUpload = $('#upldfile').get(0);
+                var files = fileUpload.files;
+                if (files.length <= 0) {
+                    swal({ title: 'Error!', text: 'Please select the file you are to upload!', type: 'error' })
+                    
+                    return;
+                }
+                $('#saveTestBtn').prop('disabled', true);
+
+                var data = new FormData();
+                for (var x = 0; x < files.length; x++) {
+                    data.append(files[x].name + x, files[x]);
+                }
+   
+                $.ajax({
+                    type: "POST",
+                    url: $('#usersalarycreate').data('request-url'),//'UploadFiles',
+                    contentType: false,
+                    processData: false,
+                    data: data,
+                    success: function (response) {
+                        console.log('***', response)
+                        if (response.RespCode === 0) {
+                            $('#upldfile').val('');
+                            swal({ title: 'Successfully uploaded', text: response.RespMessage, type: 'success' })
+                            $('#divGrid').html(response.data_html);
+                            $('#btnGenerate').css('display', 'block');
+                        }
+                        else {
+                            swal({ title: 'Error!', text: response.RespMessage, type: 'error' })
+                        }
+                    },
+                    error: function (err) {
+                        console.log(err);
+                    }
+                });
+
+            }
+            else {
+                alert("This browser doesn't support HTML5 file uploads!");
+                //loaderSpin2(false);
+            }
+        });
+
+    });
+</script>
+    }
+
+
+
+
+
+
+
+
+
+
+                
